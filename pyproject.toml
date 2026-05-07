@@ -1,7 +1,7 @@
 [project]
 name = "resume-critiquer"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Professional AI-powered resume analyzer using OpenAI and Streamlit"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -9,4 +9,5 @@ dependencies = [
     "pypdf>=6.10.2",
     "python-dotenv>=1.2.2",
     "streamlit>=1.57.0",
+    "pydantic-settings>=2.0.0",
 ]

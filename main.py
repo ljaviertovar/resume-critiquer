@@ -1,78 +1,59 @@
+"""
+Resume Critiquer - Professional AI Resume Analyzer
+Main Streamlit application entry point.
+"""
+
 import streamlit as st
+from app.config import settings
+from app.core.resume_parser import ResumeParser
+from app.services.ai_analyzer import AIAnalyzer
+from app.ui import styles, components
 
-import io
-import os
-from pypdf import PdfReader
-from openai import OpenAI
-from dotenv import load_dotenv
 
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-
+# Page configuration
 st.set_page_config(
-    page_title="AI Resume Critiquer", page_icon=":note:", layout="centered"
+    page_title="AI Resume Critiquer",
+    page_icon="🚀",
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-st.title("AI Resume Critiquer")
-st.markdown(
-    "Upload your resume in PDF format, and the AI will provide feedback to help you improve it."
+# Inject dark theme CSS
+styles.inject_css()
+
+# Render header
+components.render_header()
+
+# Render upload section
+uploaded_file, job_role = components.render_upload_section()
+
+# Main analysis logic
+analyze_button = st.button(
+    "Analizar CV",
+    type="primary",
+    use_container_width=True,
 )
 
-upload_file = st.file_uploader("Upload your resume (PDF or TXT)", type=["pdf", "txt"])
-job_role = st.text_input("Enter the job role you are applying for")
+if analyze_button:
+    if not uploaded_file:
+        components.render_error("Sube un archivo PDF o TXT antes de iniciar el análisis.")
+    else:
+        try:
+            with st.spinner("Extrayendo el texto del CV..."):
+                resume_text = ResumeParser.parse(uploaded_file)
 
+            analyzer = AIAnalyzer(settings)
 
-def extract_text_from_pdf(pdf_file):
-    reader = PdfReader(pdf_file)
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text() + "\n"
-    return text
+            st.caption("Texto extraído correctamente. Generando recomendaciones...")
+            components.render_feedback(analyzer.analyze(resume_text, job_role))
 
-
-def extract_text_from_file(uploaded_file):
-    if uploaded_file.type == "application/pdf":
-        return extract_text_from_pdf(io.BytesIO(uploaded_file.read()))
-    return uploaded_file.read().decode("utf-8")
-
-
-analize_button = st.button("Analyze Resume")
-if analize_button and upload_file:
-    try:
-        file_content = extract_text_from_file(upload_file)
-        if not file_content.strip():
-            st.error("The uploaded file is empty. Please upload a valid resume.")
-        else:
-            prompt = f"""Please analyze this resume and provide constructive feedback. 
-            Focus on the following aspects:
-            1. Content clarity and impact
-            2. Skills presentation
-            3. Experience descriptions
-            4. Specific improvements for {job_role if job_role else "general job applications"}
-            
-            Resume content:
-            {file_content}
-            
-            Please provide your analysis in a clear, structured format with specific recommendations."""
-
-            client = OpenAI(api_key=OPENAI_API_KEY)
-
-            response = client.chat.completions.create(
-                model=OPENAI_MODEL,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert resume reviewer with years of experience in HR and recruitment.",
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.7,
-                max_tokens=1500,
+        except ValueError as e:
+            components.render_error(str(e))
+        except Exception as e:
+            components.render_error(
+                f"No se pudo completar el análisis: {str(e)}\n\n"
+                "Revisa que tu OPENAI_API_KEY esté configurada correctamente en el archivo .env."
             )
-            st.subheader("AI Feedback:")
-            st.write(response.choices[0].message.content)
-    except Exception as e:
-        st.error(f"An error occurred while analyzing the resume: {e}")
-elif analize_button:
-    st.error("Please upload a resume file before analyzing.")
+else:
+    if not uploaded_file:
+        components.render_empty_state()
