@@ -33,7 +33,7 @@ DARK_THEME_CSS = """
 
     .block-container {
         max-width: 1080px;
-        padding: 3rem 2rem 4rem;
+        padding: 2.75rem 2rem 4rem;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -47,7 +47,7 @@ DARK_THEME_CSS = """
     }
 
     .app-hero {
-        padding: 2rem 0 2.4rem;
+        padding: 1.75rem 0 2.25rem;
         border-bottom: 1px solid var(--border);
     }
 
@@ -79,7 +79,7 @@ DARK_THEME_CSS = """
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 0.75rem;
-        margin-top: 1.5rem;
+        margin-top: 1.65rem;
     }
 
     .feature-grid span {
@@ -92,16 +92,11 @@ DARK_THEME_CSS = """
         padding: 0.82rem 0.9rem;
     }
 
-    .input-panel {
-        display: block;
-        margin-top: 2rem;
-    }
-
     .section-heading {
         align-items: flex-start;
         display: flex;
         gap: 1rem;
-        margin: 2.1rem 0 1.2rem;
+        margin: 2.25rem 0 1.15rem;
     }
 
     .section-heading > span {
@@ -134,19 +129,43 @@ DARK_THEME_CSS = """
         min-width: 0;
     }
 
-    [data-testid="stFileUploader"], [data-testid="stTextInput"] {
+    [data-testid="stHorizontalBlock"] {
+        align-items: stretch;
+        gap: 1.25rem;
+    }
+
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
         background-color: var(--bg-secondary);
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 1rem;
         box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        min-height: 12.25rem;
+        padding: 1.1rem;
+    }
+
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] [data-testid="stVerticalBlock"] {
+        gap: 0.55rem;
+    }
+
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] h4 {
+        font-size: 1.08rem;
+        margin: 0 0 0.2rem;
+    }
+
+    [data-testid="stFileUploader"], [data-testid="stTextInput"] {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        box-shadow: none;
     }
 
     [data-testid="fileUploadDropzone"] {
         background-color: var(--bg-tertiary);
         border: 1px dashed var(--border-strong);
         border-radius: 8px;
-        min-height: 4.4rem;
+        min-height: 4.75rem;
         padding: 1rem !important;
     }
 
@@ -176,6 +195,10 @@ DARK_THEME_CSS = """
         cursor: pointer;
         transition: all 0.2s ease;
         box-shadow: 0 12px 30px rgba(56, 189, 248, 0.18);
+    }
+
+    div[data-testid="stButton"] {
+        margin-top: 1rem;
     }
 
     .stButton > button:hover {
@@ -229,7 +252,7 @@ DARK_THEME_CSS = """
         display: grid;
         gap: 1.5rem;
         grid-template-columns: minmax(0, 1.3fr) minmax(220px, 0.7fr);
-        margin-top: 1.2rem;
+        margin-top: 1.35rem;
         padding: 1.35rem;
     }
 
@@ -261,7 +284,20 @@ DARK_THEME_CSS = """
 
     .feedback-heading {
         border-top: 1px solid var(--border);
-        padding-top: 2rem;
+        margin-top: 2rem;
+        padding-top: 1.85rem;
+        scroll-margin-top: 1rem;
+    }
+
+    [data-testid="stStatusWidget"] {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    [data-testid="stStatusWidget"] p {
+        color: var(--text-secondary);
     }
 
     .stMarkdown a, a {
@@ -309,6 +345,14 @@ DARK_THEME_CSS = """
             padding: 2rem 1.2rem 3rem;
         }
 
+        [data-testid="stHorizontalBlock"] {
+            gap: 1rem;
+        }
+
+        [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+            min-height: 0;
+        }
+
         .feature-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -345,7 +389,7 @@ DARK_THEME_CSS = """
             font-size: 1.3rem;
         }
 
-        [data-testid="stFileUploader"], [data-testid="stTextInput"] {
+        [data-testid="stHorizontalBlock"] > [data-testid="column"] {
             padding: 0.9rem;
         }
 
