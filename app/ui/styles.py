@@ -184,9 +184,10 @@ DARK_THEME_CSS = """
         color: var(--text-secondary);
     }
 
-    .stButton > button {
+    .stButton > button,
+    button[data-testid="stBaseButton-primary"] {
         background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
-        color: #06111f;
+        color: #06111f !important;
         border: none;
         border-radius: 8px;
         font-weight: 700;
@@ -195,6 +196,35 @@ DARK_THEME_CSS = """
         cursor: pointer;
         transition: all 0.2s ease;
         box-shadow: 0 12px 30px rgba(56, 189, 248, 0.18);
+    }
+
+    .stButton > button *,
+    .stButton > button p,
+    .stButton > button span,
+    button[data-testid="stBaseButton-primary"] *,
+    button[data-testid="stBaseButton-primary"] p,
+    button[data-testid="stBaseButton-primary"] span {
+        color: #06111f !important;
+        font-weight: 800 !important;
+        opacity: 1 !important;
+    }
+
+    .stButton > button:disabled,
+    .stButton > button[disabled],
+    button[data-testid="stBaseButton-primary"]:disabled,
+    button[data-testid="stBaseButton-primary"][disabled] {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%) !important;
+        color: #06111f !important;
+        opacity: 0.82 !important;
+        cursor: progress;
+    }
+
+    .stButton > button:disabled *,
+    .stButton > button[disabled] *,
+    button[data-testid="stBaseButton-primary"]:disabled *,
+    button[data-testid="stBaseButton-primary"][disabled] * {
+        color: #06111f !important;
+        opacity: 1 !important;
     }
 
     div[data-testid="stButton"] {

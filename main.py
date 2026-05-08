@@ -29,38 +29,38 @@ uploaded_file, job_role = components.render_upload_section()
 
 # Main analysis logic
 analyze_button = st.button(
-    "Analizar CV",
+    "Analyze Resume",
     type="primary",
     use_container_width=True,
 )
 
 if analyze_button:
     if not uploaded_file:
-        components.render_error("Sube un archivo PDF o TXT antes de iniciar el análisis.")
+        components.render_error("Upload a PDF or TXT resume before starting the analysis.")
     else:
-        status = st.status("Preparando el análisis del CV...", expanded=True)
+        status = st.status("Preparing resume analysis...", expanded=True)
         try:
-            status.write("Leyendo el archivo y extrayendo el texto.")
+            status.write("Reading the file and extracting text.")
 
-            with st.spinner("Extrayendo el texto del CV..."):
+            with st.spinner("Extracting resume text..."):
                 resume_text = ResumeParser.parse(uploaded_file)
 
-            status.write("Texto extraído correctamente.")
-            status.write("Conectando con el modelo de IA para generar recomendaciones.")
+            status.write("Text extracted successfully.")
+            status.write("Connecting to the AI model to generate recommendations.")
             analyzer = AIAnalyzer(settings)
 
-            status.update(label="Generando feedback personalizado...", state="running")
+            status.update(label="Generating personalized feedback...", state="running")
             components.render_feedback(analyzer.analyze(resume_text, job_role))
-            status.update(label="Análisis completado.", state="complete", expanded=False)
+            status.update(label="Analysis complete.", state="complete", expanded=False)
 
         except ValueError as e:
-            status.update(label="No se pudo analizar el archivo.", state="error")
+            status.update(label="The file could not be analyzed.", state="error")
             components.render_error(str(e))
         except Exception as e:
-            status.update(label="El análisis se interrumpió.", state="error")
+            status.update(label="The analysis was interrupted.", state="error")
             components.render_error(
-                f"No se pudo completar el análisis: {str(e)}\n\n"
-                "Revisa que tu OPENAI_API_KEY esté configurada correctamente en el archivo .env."
+                f"The analysis could not be completed: {str(e)}\n\n"
+                "Make sure your OPENAI_API_KEY is configured correctly in the .env file."
             )
 else:
     if not uploaded_file:

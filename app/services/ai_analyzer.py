@@ -36,8 +36,8 @@ class AIAnalyzer:
             messages=[
                 {
                     "role": "system",
-                    "content": "Eres una persona experta en revisión de CVs con más de 20 años de experiencia en HR, reclutamiento y sistemas ATS. "
-                    "Entrega feedback constructivo, específico y accionable en español, usando un formato estructurado y fácil de leer.",
+                    "content": "You are an expert resume reviewer with 20+ years of experience in HR, recruitment, and ATS systems. "
+                    "Provide constructive, specific, actionable feedback in English using a clear structured format.",
                 },
                 {"role": "user", "content": prompt},
             ],
@@ -53,31 +53,31 @@ class AIAnalyzer:
     def _build_prompt(resume_text: str, job_role: str) -> str:
         """Build the analysis prompt with structured output format."""
         job_context = (
-            f"\nEnfoque específico: optimiza el CV para el puesto de {job_role}."
+            f"\nSpecific focus: optimize the resume for a {job_role} role."
             if job_role
-            else "\nEnfoque general: optimiza el CV para mayor visibilidad en el mercado laboral."
+            else "\nGeneral focus: optimize the resume for better visibility in the job market."
         )
 
-        return f"""Analiza el siguiente CV y entrega feedback completo y accionable con esta estructura exacta:
+        return f"""Analyze the following resume and provide comprehensive, actionable feedback using this exact structure:
 
-## Puntuación general
-Califica la calidad del CV de 0 a 10 e incluye una explicación breve.
+## Overall Score
+Rate the resume quality from 0 to 10 and include a brief explanation.
 
-## Fortalezas
-Lista de 3 a 5 fortalezas principales en viñetas.
+## Strengths
+List 3 to 5 key strengths as bullet points.
 
-## Áreas de mejora
-Lista de 3 a 5 puntos específicos que necesitan trabajo.
+## Areas for Improvement
+List 3 to 5 specific points that need work.
 
-## Recomendaciones
-Entrega 5 recomendaciones concretas y accionables para mejorar el CV.{job_context}
+## Recommendations
+Provide 5 concrete, actionable recommendations to improve the resume.{job_context}
 
-## Optimización ATS
-- Keywords faltantes o poco visibles
-- Posibles problemas de formato para sistemas ATS
-- Contenido sugerido para agregar
+## ATS Optimization
+- Missing or underrepresented keywords
+- Possible formatting issues for ATS systems
+- Suggested content to add
 
 ---
 
-CV A ANALIZAR:
+RESUME TO ANALYZE:
 {resume_text}"""

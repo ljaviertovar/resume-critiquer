@@ -13,14 +13,14 @@ def render_header() -> None:
             <div class="hero-kicker">Resume review powered by AI</div>
             <h1>AI Resume Critiquer</h1>
             <p>
-                Sube tu CV en PDF o TXT y recibe una revisión clara, accionable y
-                orientada al rol que quieres conseguir.
+                Upload your resume as a PDF or TXT file and get clear, actionable
+                feedback tailored to the role you want to land.
             </p>
-            <div class="feature-grid" aria-label="Puntos evaluados">
-                <span>Claridad e impacto</span>
-                <span>Experiencia y logros</span>
-                <span>Skills relevantes</span>
-                <span>Optimización ATS</span>
+            <div class="feature-grid" aria-label="Review focus areas">
+                <span>Clarity and impact</span>
+                <span>Experience and achievements</span>
+                <span>Relevant skills</span>
+                <span>ATS optimization</span>
             </div>
         </section>
         """,
@@ -40,8 +40,8 @@ def render_upload_section() -> Tuple[Optional[Any], str]:
         <div class="section-heading">
             <span>01</span>
             <div>
-                <h2>Prepara el análisis</h2>
-                <p>El archivo es obligatorio. El rol objetivo ayuda a personalizar las recomendaciones.</p>
+                <h2>Prepare the analysis</h2>
+                <p>The resume file is required. Adding a target role helps personalize the recommendations.</p>
             </div>
         </div>
         """,
@@ -51,29 +51,29 @@ def render_upload_section() -> Tuple[Optional[Any], str]:
     col1, col2 = st.columns([1.55, 1], gap="large")
 
     with col1:
-        st.markdown("#### CV")
+        st.markdown("#### Resume")
         uploaded_file = st.file_uploader(
-            "Sube un archivo PDF o TXT",
+            "Upload a PDF or TXT file",
             type=["pdf", "txt"],
-            help="Formatos soportados: PDF y TXT. Tamaño máximo: 200 MB.",
+            help="Supported formats: PDF and TXT. Maximum size: 200 MB.",
             label_visibility="visible",
         )
         if uploaded_file:
             st.caption(
-                f"Archivo listo: {uploaded_file.name} "
+                f"File ready: {uploaded_file.name} "
                 f"({uploaded_file.size / 1024:.1f} KB)"
             )
         else:
-            st.caption("Tu CV se procesa localmente antes de enviarse al análisis.")
+            st.caption("Your resume is parsed locally before the analysis starts.")
 
     with col2:
-        st.markdown("#### Rol objetivo")
+        st.markdown("#### Target role")
         job_role = st.text_input(
-            "Puesto o seniority",
-            placeholder="Ej. Senior Python Engineer",
-            help="Déjalo vacío si quieres una revisión general.",
+            "Job title or seniority",
+            placeholder="e.g., Senior Python Engineer",
+            help="Leave this blank for a general resume review.",
         )
-        st.caption("Opcional, pero recomendado para obtener feedback más preciso.")
+        st.caption("Optional, but recommended for more precise feedback.")
 
     return uploaded_file, job_role.strip()
 
@@ -90,8 +90,8 @@ def render_feedback(generator: Generator[str, None, None]) -> None:
         <div id="analysis-result" class="section-heading feedback-heading">
             <span>02</span>
             <div>
-                <h2>Feedback de IA</h2>
-                <p>Revisión estructurada con fortalezas, mejoras y próximos pasos.</p>
+                <h2>AI Feedback</h2>
+                <p>Structured review with strengths, improvements, and next steps.</p>
             </div>
         </div>
         """,
@@ -100,11 +100,11 @@ def render_feedback(generator: Generator[str, None, None]) -> None:
     feedback_container = st.container()
 
     with feedback_container:
-        st.caption("Generando la respuesta en tiempo real. Puedes empezar a leer mientras continúa el análisis.")
+        st.caption("Generating the response in real time. You can start reading while the analysis continues.")
         focus_result_heading()
         st.write_stream(generator)
 
-    st.success("Análisis completado. Ya puedes revisar las recomendaciones y ajustar tu CV.")
+    st.success("Analysis complete. You can now review the recommendations and improve your resume.")
 
 
 def focus_result_heading() -> None:
@@ -195,16 +195,16 @@ def render_empty_state() -> None:
         <section class="empty-state">
             <div>
                 <span class="empty-icon">Ready</span>
-                <h3>Cuando subas tu CV, aparecerá aquí el análisis.</h3>
+                <h3>Your analysis will appear here after you upload a resume.</h3>
                 <p>
-                    Te mostraré una puntuación general, fortalezas, áreas de mejora,
-                    recomendaciones concretas y ajustes para ATS.
+                    You will get an overall score, key strengths, improvement areas,
+                    concrete recommendations, and ATS optimization tips.
                 </p>
             </div>
             <ol>
-                <li>Sube tu archivo PDF o TXT.</li>
-                <li>Agrega el rol objetivo si quieres feedback personalizado.</li>
-                <li>Presiona Analizar CV.</li>
+                <li>Upload your PDF or TXT file.</li>
+                <li>Add a target role if you want tailored feedback.</li>
+                <li>Click Analyze Resume.</li>
             </ol>
         </section>
         """,
@@ -214,5 +214,5 @@ def render_empty_state() -> None:
 
 def render_loading_state() -> None:
     """Render a loading state with animation."""
-    with st.spinner("Analizando tu CV..."):
+    with st.spinner("Analyzing your resume..."):
         st.write("")
