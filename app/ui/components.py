@@ -212,6 +212,18 @@ def render_empty_state() -> None:
     )
 
 
+def render_footer() -> None:
+    """Render the page footer."""
+    st.markdown(
+        """
+        <footer class="app-footer">
+            <p>Developed by <a href="https://www.ljaviertovar.dev/" target="_blank" rel="noreferrer">L Javier Tovar</a></p>
+        </footer>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def render_loading_state() -> None:
     """Render a loading state with animation."""
     with st.spinner("Analyzing your resume..."):

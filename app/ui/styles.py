@@ -424,6 +424,28 @@ APP_CSS = """
         color: var(--text-primary);
     }
 
+    .app-footer {
+        border-top: 1px solid var(--border);
+        margin-top: 3rem;
+        padding: 1.5rem 0;
+        text-align: center;
+    }
+
+    .app-footer p {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        margin: 0;
+    }
+
+    .app-footer a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    .app-footer a:hover {
+        text-decoration: underline;
+    }
+
     @media (max-width: 900px) {
         .block-container {
             padding: 2rem 1.2rem 3rem;

@@ -65,3 +65,5 @@ if analyze_button:
 else:
     if not uploaded_file:
         components.render_empty_state()
+
+components.render_footer()
