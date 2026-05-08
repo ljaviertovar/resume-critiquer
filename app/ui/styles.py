@@ -1,10 +1,43 @@
-"""CSS styling for a polished Streamlit dark interface."""
+"""CSS styling for a Streamlit interface that adapts to light and dark themes."""
 
 import streamlit as st
+import streamlit.components.v1 as st_components
 
-DARK_THEME_CSS = """
+# JS injected into an iframe to bridge Streamlit's color-scheme → data-theme on <html>.
+# Streamlit does not expose a data-theme attribute; it sets `color-scheme: light|dark`
+# on the `.stApp` emotion-cache class.  We read that computed value and write
+# `data-theme="light"|"dark"` onto <html> so our CSS selectors can pick it up.
+_THEME_BRIDGE_JS = """
+<script>
+(function () {
+    var doc = window.parent.document;
+
+    function applyTheme() {
+        var stApp = doc.querySelector('[data-testid="stApp"]');
+        if (!stApp) { setTimeout(applyTheme, 100); return; }
+        var scheme = window.parent.getComputedStyle(stApp).colorScheme;
+        doc.documentElement.setAttribute('data-theme', scheme === 'light' ? 'light' : 'dark');
+    }
+
+    applyTheme();
+
+    function startObserving() {
+        var stApp = doc.querySelector('[data-testid="stApp"]');
+        if (!stApp) { setTimeout(startObserving, 100); return; }
+        new MutationObserver(applyTheme).observe(stApp, { attributes: true, attributeFilter: ['class'] });
+    }
+    startObserving();
+
+    [100, 200, 400, 800, 1500, 3000].forEach(function (t) { setTimeout(applyTheme, t); });
+})();
+</script>
+"""
+
+APP_CSS = """
 <style>
-    :root {
+    /* Dark theme palette (default / fallback) */
+    :root,
+    html[data-theme="dark"] {
         --bg-primary: #080b12;
         --bg-secondary: #101620;
         --bg-tertiary: #17202c;
@@ -17,18 +50,39 @@ DARK_THEME_CSS = """
         --accent: #60a5fa;
         --accent-strong: #38bdf8;
         --accent-soft: rgba(96, 165, 250, 0.14);
+        --accent-border: rgba(96, 165, 250, 0.35);
         --accent-danger: #fb7185;
         --accent-success: #34d399;
         --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
     }
 
-    html, body, .stApp, .main {
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
+    /* Light theme palette */
+    html[data-theme="light"] {
+        --bg-primary: #f5f7fa;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #eef1f6;
+        --bg-muted: #e4e8f0;
+        --border: #d1d9e6;
+        --border-strong: #aab4c8;
+        --text-primary: #0f1923;
+        --text-secondary: #3d4f63;
+        --text-muted: #6b7a8d;
+        --accent: #2563eb;
+        --accent-strong: #0284c7;
+        --accent-soft: rgba(37, 99, 235, 0.10);
+        --accent-border: rgba(37, 99, 235, 0.30);
+        --accent-danger: #e11d48;
+        --accent-success: #059669;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     }
 
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    }
+
+    .stApp {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     .block-container {
@@ -102,7 +156,7 @@ DARK_THEME_CSS = """
     .section-heading > span {
         align-items: center;
         background: var(--accent-soft);
-        border: 1px solid rgba(96, 165, 250, 0.35);
+        border: 1px solid var(--accent-border);
         border-radius: 999px;
         color: var(--accent-strong);
         display: inline-flex;
@@ -271,7 +325,7 @@ DARK_THEME_CSS = """
 
     .stInfo {
         background-color: var(--accent-soft);
-        border: 1px solid rgba(96, 165, 250, 0.35);
+        border: 1px solid var(--accent-border);
     }
 
     .empty-state {
@@ -433,5 +487,6 @@ DARK_THEME_CSS = """
 
 
 def inject_css() -> None:
-    """Inject the dark theme CSS into the Streamlit app."""
-    st.markdown(DARK_THEME_CSS, unsafe_allow_html=True)
+    """Inject theme-aware CSS and theme-bridge JS into the Streamlit app."""
+    st.markdown(APP_CSS, unsafe_allow_html=True)
+    st_components.html(_THEME_BRIDGE_JS, height=0)

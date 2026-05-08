@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Inject dark theme CSS
+# Inject theme-aware CSS
 styles.inject_css()
 
 # Render header
